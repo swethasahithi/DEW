@@ -1,4 +1,4 @@
-export interface ExitingNodeData {
+export interface ExistingNodeData {
     id: string;
     name: string;
     disabled: number;

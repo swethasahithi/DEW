@@ -5,7 +5,7 @@ import { ViewChildren, QueryList } from '@angular/core';
 declare let LeaderLine: any;
 import {DOCUMENT} from "@angular/common";
 import { HttpClient } from '@angular/common/http';
-import { ExitingNodeData } from './ExitingNodeData';
+import { ExistingNodeData } from './ExistingNodeData';
 import {v4 as uuidv4} from 'uuid';
 
 
@@ -46,8 +46,7 @@ export class HomeComponent implements OnInit {
  
   constructor(private http: HttpClient,private cd : ChangeDetectorRef) {
     this.getExistingNodeData().subscribe((data: any) =>{
-      data.forEach((element : ExitingNodeData) => {
-        console.log(element);
+      data.forEach((element : ExistingNodeData) => {
        let point : any = {x: element.x, y : element.y};
        const nodeData: NodeData = {id: element.id, name: element.name,  showInputBox: false, disabled: element.disabled == 1? true : false, 
        isNode: element.isNode == 1 ? true : false, isLine: element.isLink == 1 ? true : false, 
@@ -61,13 +60,12 @@ export class HomeComponent implements OnInit {
    }
 
    getExistingNodeData() {
-    return this.http.get<ExitingNodeData>("http://localhost:5000/topology");
+    return this.http.get<ExistingNodeData>("http://localhost:5000/topology");
    }
 
    sendDataToDb(data: JSON) {
-     return this.http.post<ExitingNodeData>("http://localhost:5000/topology", data).subscribe({
+     return this.http.post<ExistingNodeData>("http://localhost:5000/topology", data).subscribe({
       next: data => {
-          console.log(data);
           alert("Saved Successfully!")
       },
       error: error => {
@@ -81,7 +79,6 @@ export class HomeComponent implements OnInit {
    ngAfterViewInit(): void {
     this.components.changes.subscribe((comps: QueryList<Directive>) =>
     {
-      console.log(this.components.toArray());
       setTimeout(()=>{
         this.containerList.forEach((item) => {
           if (item.isLine) {
@@ -150,8 +147,7 @@ export class HomeComponent implements OnInit {
    
     this.firstNode = this.components.toArray()[node1];
     this.secondNode = this.components.toArray()[node2];
-    console.log(this.components.toArray());
-    console.log(this.firstNode, this.secondNode);
+    
     this.createLeaderLine(this.firstNode, this.secondNode, savedLink);
      //disable movement for linked nodes
     }
@@ -162,7 +158,6 @@ export class HomeComponent implements OnInit {
   }
 
   onDrop(node: NodeData) {
-    console.log("inside");
     if (node.name != "") {
       node.disabled = true;
     }
@@ -187,10 +182,6 @@ export class HomeComponent implements OnInit {
     let list : NodeData[] = type == "node" ? this.nodeList : this.containerList;
     // duplicate node name check
     list.forEach((item, index) => {
-      console.log(item.name);
-      console.log(node.name);
-      console.log(this.nodeList);
-      console.log(i);
       if (item.name == node.name && index != i) {
         node.name = this.prevName;
         alert("Node name already exists");
@@ -207,7 +198,6 @@ export class HomeComponent implements OnInit {
       });
       this.prevName = "";
     }
-    console.log(this.components.toArray());
 
   }
 
@@ -215,7 +205,6 @@ export class HomeComponent implements OnInit {
     if (elementFirst == elementSecond) {
       alert("Select two different nodes");
     } else if (savedLink || !this.checkIfLinkExists(this.firstNodeName + " " + this.secondNodeName)){
-      console.log('inside');
     const line = new LeaderLine(elementFirst.nativeElement, elementSecond.nativeElement, {
       startPlug: 'disc',
       endPlug: 'disc',
@@ -234,7 +223,6 @@ export class HomeComponent implements OnInit {
       //disable movement for linked nodes
       this.nodeList[node1].disabled = true;
       this.nodeList[node2].disabled = true;
-      console.log(this.containerList);
       this.addLine = false;
     }
   }
@@ -255,7 +243,6 @@ export class HomeComponent implements OnInit {
 
 
   addNewLine() {
-    console.log('ini');
     this.addLine = !this.addLine;
   }
 
@@ -265,7 +252,6 @@ export class HomeComponent implements OnInit {
         this.firstNode = this.components.toArray()[i];
         this.firstNodeName = node.name;
         node.isNodeSelected = this.addLine;
-        console.log(this.firstNode.nativeElement);
       } else if (this.secondNode == null && node.name != "") {
         this.secondNode = this.components.toArray()[i];
         this.secondNodeName = node.name;
@@ -295,14 +281,12 @@ export class HomeComponent implements OnInit {
 
   onDragEnded(event: any, node: NodeData): void {
     node.point = event.source.getFreeDragPosition();
-    console.log(event.source.getFreeDragPosition()); // returns { x: 0, y: 0 }
   }
 
   saveTopology() {
-    console.log(this.containerList);
-    let finalList: ExitingNodeData [] = [];
+    let finalList: ExistingNodeData [] = [];
     this.containerList.forEach((node) => {
-      const data : ExitingNodeData = { id: node.id, name: node.name, 
+      const data : ExistingNodeData = { id: node.id, name: node.name, 
         disabled: node.disabled? 1: 0, isNode: node.isNode ? 1 : 0, isLink: node.isLine ? 1 : 0, x: node.point.x, y: node.point.y };
         finalList.push(data);
     })

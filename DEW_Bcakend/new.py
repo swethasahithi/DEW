@@ -32,9 +32,7 @@ def topology():
   if request.method == "POST":
      data = request.get_json()
      nodes_data = data['0']
-     print(nodes_data)
      for node in nodes_data:
-      print(node)
       new_name = node['name']
       new_isNode = node['isNode']
       new_isLink = node['isLink']

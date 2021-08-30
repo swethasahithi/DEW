@@ -1,0 +1,72 @@
+<h3 style="text-align: center;">DEW</h3>
+<div class="container-fluid container-box">
+
+<div class="row row-box">
+    <div class="col-2" style="border-right: 2px solid black; background-color: white;">
+        <h5 style="text-align: center;color: blue;">TEXT</h5>
+        <table class="table table-striped">
+            <tbody>
+                <tr *ngFor="let item of containerList;let i=index" (dblclick)="onDoubleClick(item, i, 'text')" (keydown.enter)="onExitClick(item, 'text', i)">
+                   <p *ngIf="item.isNode && !item.showInputBoxForText" ngbTooltip="Double Click to edit Name and click enter"> Node {{item.name}}</p>
+                   <input *ngIf="item.showInputBoxForText" maxLength ="1" class="input-box" type="text" [(ngModel)]="item.name" placeholder="name" id="{{ 'text' + i}}"  />
+                   <p *ngIf="item.isLine"> Link {{item.name}}</p>
+                </tr>
+                <tr>
+                    
+                <span class="fa fa-plus-circle" (click)="showOptions()" ngbTooltip="Add new Node/Link"></span>
+                    <p *ngIf="showOption">
+                        <input type="radio" value="node" name="actionType" [(ngModel)]="actionType"> Node
+                        <input type="radio" value="link" name="actionType" [(ngModel)]="actionType"> Link
+                     </p>
+                    
+                    <input *ngIf="actionType==='node' && showOption" type="text" [(ngModel)]="newName" placeholder="Enter node name" id="newNode" (keydown.enter)="onNewNodeName(newName)" required name="newNode"/>
+                     <div *ngIf="actionType==='link' && showOption">
+                        <input  type="text" [(ngModel)]="link1" maxLength ="1" placeholder="Node1" id="node1" (keydown.enter)="onNewLink(false)" required name="link1"/>
+                        <input  type="text" [(ngModel)]="link2" maxLength ="1" placeholder="Node2" id="node2" (keydown.enter)="onNewLink(false)" required name="link2"/>
+                     </div>
+                    
+                    </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-7" style="border-left: 2px solid black; background-color: white;" >
+        <h5 style="text-align: center;color: blue;">DRAW</h5>
+    <ng-container *ngFor="let node of nodeList ;let i=index"  >
+       <div [ngClass]="{'example-box': true, 'box-border': !node.isNodeSelected, 'box-border-selected': node.isNodeSelected}"  cdkDrag  ngbTooltip="Double Click to edit Name and click enter"
+       [cdkDragDisabled]="node.disabled"(dblclick)="onDoubleClick(node, i, 'node')"
+       (keydown.enter)="onExitClick(node, 'node', i)" (click)="clickNodeForAddingLine(i,node)" (cdkDragEnded)="onDragEnded($event, node)"
+       [cdkDragFreeDragPosition]="node.point" #cmp>
+        <div *ngIf="!node.showInputBox">
+            {{node.name}}
+            <div *ngIf="!node.disabled" class="example-handle" cdkDragHandle>
+                <svg width="18px" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                  <path d="M0 0h24v24H0z" fill="none"></path>
+                </svg>
+              </div>
+        </div>
+        <input *ngIf="node.showInputBox" maxLength ="1" class="input-box" type="text" [(ngModel)]="node.name" placeholder="name" id={{i}} onchange=""/>
+       </div>
+    </ng-container>
+    </div>
+
+    <div class="col-3 d-flex flex-column align-items-end" style="background-color: white;padding-top:2%;" >
+        <div class="example-box box-border" (click)="onClick()" ngbTooltip="Click Here to Add new Node">
+            New Node
+        </div>
+        
+        <div  [ngClass]="{'circle': true, 'box-color': !addLine, 'box-color-selected': addLine}" 
+        (click)="addNewLine()" [ngbTooltip]="addLine? 'Select two Nodes': 'Add Link' " >
+         <i class="fa fa-long-arrow-right fa-lg" ></i>
+        </div>
+        <p class="text-wrap" *ngIf=addLine style="font-size: small;"> **<b>Select two Nodes</b></p>
+
+        <div>
+            <button type="submit" style="margin-top: 10px;" (click)="saveTopology()">Save Topology</button>
+        </div>
+    </div>
+    
+</div>
+</div>
+
+

@@ -14,17 +14,7 @@
                 <tr>
                     
                 <span class="fa fa-plus-circle" (click)="showOptions()" ngbTooltip="Add new Node/Link"></span>
-                    <p *ngIf="showOption">
-                        <input type="radio" value="node" name="actionType" [(ngModel)]="actionType"> Node
-                        <input type="radio" value="link" name="actionType" [(ngModel)]="actionType"> Link
-                     </p>
-                    
-                    <input *ngIf="actionType==='node' && showOption" type="text" [(ngModel)]="newName" placeholder="Enter node name" id="newNode" (keydown.enter)="onNewNodeName(newName)" required name="newNode"/>
-                     <div *ngIf="actionType==='link' && showOption">
-                        <input  type="text" [(ngModel)]="link1" maxLength ="1" placeholder="Node1" id="node1" (keydown.enter)="onNewLink(false)" required name="link1"/>
-                        <input  type="text" [(ngModel)]="link2" maxLength ="1" placeholder="Node2" id="node2" (keydown.enter)="onNewLink(false)" required name="link2"/>
-                     </div>
-                    
+                    <input *ngIf="showOption" type="text" [(ngModel)]="newEntry" placeholder="Enter node name/Link" id="newEntry" (keydown.enter)="onNewEntry(newEntry)" required name="newEntry"/>        
                     </tr>
             </tbody>
         </table>

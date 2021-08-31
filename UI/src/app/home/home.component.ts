@@ -39,6 +39,7 @@ export class HomeComponent implements OnInit {
   prevName: string = "";
   test: any;
   showOption: boolean = false;
+  newEntry: string = "";
 
 
   @ViewChildren('cmp',) components:QueryList<Directive>;
@@ -118,7 +119,35 @@ export class HomeComponent implements OnInit {
     this.nodeListLength = this.nodeList.length;
   }
 
+  onNewEntry(name: string) {
+    if (name.includes("Node")) {
+      if (name.length == 6) {
+        let a: string [] = name.split(" ");
+        console.log(a);
+        this.onNewNodeName(a[1]);
+        this.newEntry = "";
+      } else {
+        alert("Enter node name as \"Node x\"");
+      }
+    } else if (name.includes("Link")) {
+      if (name.length == 8) {
+        let  a: string [] = name.split(" ");
+        console.log(a);
+        this.link1 = a[1];
+        this.link2 = a[2];
+        this.onNewLink(false);
+        this.newEntry = "";
+      } else {
+        alert("Enter Link name as \"Link X Y\"");
+      }
+    } else  {
+      alert("Enter Either Node/Link name");
+    }
+    
+  }
+
   onNewNodeName(name: string) {
+    console.log(name);
     let x;
     if (name.includes('Node')) {
         x = name[name.length-1]
@@ -155,6 +184,7 @@ export class HomeComponent implements OnInit {
     this.link2 = "";
     this.showOption = false;
     this.actionType = "";
+    this.newEntry = "";
   }
 
   onDrop(node: NodeData) {
